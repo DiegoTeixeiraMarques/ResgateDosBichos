@@ -1,64 +1,88 @@
 local composer = require( "composer" ) 	-- importação do composer
 local scene = composer.newScene()		-- criação do composer
 
--- Faz transição para o game-template.lua
-local function gotoGame()
-	composer.gotoScene("game-template", {time=800, effect="zoomOutInFade"})
-end
-
 local function gotoMenu()
 	composer.gotoScene("menu", {time=800, effect="crossFade"})
 end
-
-local json = require( "json" )															-- Importando as funcionalidades JSON em LUA
-local scoresTable = {}																	-- Tabela que conterá os 10 maiores scores do jogo
-local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory )			-- Diretório onde será salvo o arquivo de maiores scores do jogo
-																						-- ### CARREGANDO SCORES SALVOS ### --
-local function loadScores()																-- Início da função
-    local file = io.open( filePath, "r" )												-- Solicita a abertura do arquivo de scores em modo de leitura apenas
-    if file then																		-- Verifica se o arquivo existe
-		local contents = file:read( "*a" )												-- Despeja o conteúdo do arquivo na variável contents
-		io.close( file )																-- Fecha o arquivo scores
-        scoresTable = json.decode( contents )											-- Converte o JSON para uma tabela LUA
-    end
-    if ( scoresTable == nil or #scoresTable == 0 ) then									-- Se o arquivo não existir
-        scoresTable = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }									-- Atribua dez valores 0 a variável para representar o que seria as dez maiores pontuações
-    end
-end
-
-local function saveScores()																-- Início da função
-    for i = #scoresTable, 11, -1 do														-- Loop em todos os Scores salvos na tabela de pontuação
-        table.remove( scoresTable, i )													-- Removendo pontuações desnecessárias
-	end																					
-    local file = io.open( filePath, "w" )												-- Abre o arquivo de scores em modo de escrita que permite subescrever o que já existe
-    if file then																		-- Se o arquivo estiver aberto
-        file:write( json.encode( scoresTable ) )										-- Escreva as pontuações que estão na tabela de scores para o arquivo	
-        io.close( file )																-- Fecha o arquivo	
-    end																					
-end	
 
 -- Criação da cena
 function scene:create( event )
 
     local sceneGroup = self.view
-    
-	--loadScores()																		-- Carrega as pontuações existentes
-	--table.insert( scoresTable, composer.getVariable( "pontuacaoFinal" ) )				-- Insere a pontuação mais recente do jogador na tabela
-	pontuacao = composer.getVariable( "pontuacaoFinal")		
 
-	-- Carrega o game-template in back
-	composer.loadScene( "game-template" )
 
 	-- Tela menu
-	local background = display.newImageRect( sceneGroup, "images/fundog.png", display.contentHeight * 1.8, display.contentWidth / 1.5)
+	local background = display.newImageRect( sceneGroup, "images/tela_score.png", display.contentHeight * 1.8, display.contentWidth / 1.5)
 	background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    tituloText = display.newText("SCORES", display.contentCenterX, display.contentCenterY - 100, "Mario-Kart-DS", 36)
-    pontuacaoText = display.newText( pontuacao, display.contentCenterX, display.contentCenterY, "Mario-Kart-DS", 36 )
+    local botaoVoltar = display.newImageRect( sceneGroup, "images/botao_voltar.png",  477 / 2.5, 165 / 2.5)
+	botaoVoltar.x = display.contentCenterX
+    botaoVoltar.y = display.contentCenterY + 95
+    
+    -- Funcionalidades dos botões
+	botaoVoltar:addEventListener("tap", gotoMenu)
+
+    local tempoFinal = composer.getVariable( "tempo" )
+    local araraAzulPontos = composer.getVariable( "araraAzulPontos" )	
+    local loboGuaraPontos = composer.getVariable( "loboGuaraPontos" )	
+    local macacoAranhaPontos = composer.getVariable( "macacoAranhaPontos")	
+    local oncaPintadaPontos = composer.getVariable( "oncaPintadaPontos" )	
+    local guarubaPontos = composer.getVariable( "guarubaPontos" )	
+    local micoLeaoDouradoPontos = composer.getVariable( "micoLeaoDouradoPontos" )	
+    local tartarugaOlivaPontos = composer.getVariable( "tartarugaOlivaPontos" )
+
+    local score = tempoFinal + araraAzulPontos + loboGuaraPontos + macacoAranhaPontos + oncaPintadaPontos + guarubaPontos + micoLeaoDouradoPontos + tartarugaOlivaPontos 
+    
+    local scoreText = display.newText(score, display.contentCenterX + 80, display.contentCenterY - 115, "Mario-Kart-DS", 36)
+    local guarubaText = display.newText(guarubaPontos, display.contentCenterX - 240, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local araraAzulText = display.newText(araraAzulPontos, display.contentCenterX - 155, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local oncaPintadaText = display.newText(oncaPintadaPontos, display.contentCenterX - 85, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local MacacoAranhaText = display.newText(macacoAranhaPontos, display.contentCenterX - 15, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local loboGuaraText = display.newText(loboGuaraPontos, display.contentCenterX + 55, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local tartarugaOlivaText = display.newText(tartarugaOlivaPontos, display.contentCenterX + 125, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local micoLeaoDouradoText = display.newText(micoLeaoDouradoPontos, display.contentCenterX + 190, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local tempoText = display.newText(tempoFinal, display.contentCenterX + 255, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+
+    sceneGroup:insert (scoreText)
+    sceneGroup:insert (guarubaText)
+    sceneGroup:insert (araraAzulText)
+    sceneGroup:insert (oncaPintadaText)
+    sceneGroup:insert (MacacoAranhaText)
+    sceneGroup:insert (loboGuaraText)
+    sceneGroup:insert (tartarugaOlivaText)
+    sceneGroup:insert (micoLeaoDouradoText)
+    sceneGroup:insert (tempoText)
 	
 end
 
+function scene:hide( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is on screen (but is about to go off screen)
+
+	elseif ( phase == "did" ) then
+		-- Code here runs immediately after the scene goes entirely off screen
+		composer.removeScene("score")												-- Remove a cena do jogo
+	end
+end
+
+-- destroy()
+function scene:destroy( event )
+
+    local sceneGroup = self.view
+    print("destruido")
+    display.remove (scoreText)
+	--composer.removeScene("score")		
+
+end
+
 scene:addEventListener( "create", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
+
 
 return scene

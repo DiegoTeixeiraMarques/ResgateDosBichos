@@ -29,8 +29,16 @@ local passosY = 0                      -- Variável para controlar a movimentaç
 local qtdChave = 0                     -- Informa a quantiade de chaves já coletadas no jogo
 local cacadores = {}                   -- Tabela para adicionar todos os caçadores gerados e enviar para o arquivo "gerador.lua" fazer a movimentação deles
 local tempo = 500
-local pontuacao = 0
-animal = 0
+--local tempo = 0
+local animal = 0
+local run = 0
+local araraAzulPontos = 0
+local loboGuaraPontos = 0
+local macacoAranhaPontos = 0
+local oncaPintadaPontos = 0
+local guarubaPontos = 0
+local micoLeaoDouradoPontos = 0
+local tartarugaOlivaPontos = 0
 
 -- Quantidade de objetos do cenário
 local numChave = 7                     -- Quantidade de chaves criadas no início do jogo
@@ -168,11 +176,23 @@ end
 
 -- Chamada após o gameOver
 function endGame()
-    pontuacao = pontuacao + tempo	
+    -- finaliza jogo no gerador.lua
+    fimDeJogo()
+
     -- Cria variável acessivel para outra cena
-	composer.setVariable( "pontuacaoFinal", pontuacao )		
-	-- Redireciona para tela de Scores									
-    composer.gotoScene( "score", { time=800, effect="crossFade" } )					
+    local tempoFinal = tempo
+    composer.setVariable( "tempo", tempoFinal )
+    composer.setVariable( "araraAzulPontos", araraAzulPontos )	
+    composer.setVariable( "loboGuaraPontos", loboGuaraPontos )	
+    composer.setVariable( "macacoAranhaPontos", macacoAranhaPontos )	
+    composer.setVariable( "oncaPintadaPontos", oncaPintadaPontos )	
+    composer.setVariable( "guarubaPontos", guarubaPontos )	
+    composer.setVariable( "micoLeaoDouradoPontos", micoLeaoDouradoPontos )	
+    composer.setVariable( "tartarugaOlivaPontos", tartarugaOlivaPontos )		
+    
+    -- Redireciona para tela de Scores									
+    composer.gotoScene( "score", { time=800, effect="crossFade" } )
+
 end
 
 -- Função chamada após contato com caçador
@@ -188,13 +208,14 @@ end
 
 -- Movimentação de cenário
 local update = function()
-    x , y = player:localToContent(0 , 0)
-    player.x = player.x + passosX
-    player.y = player.y + passosY
-    x, y = display.contentCenterX - x, display.contentCenterY - y
-    backGroup.x, backGroup.y = backGroup.x + x, backGroup.y + y
-    player:play() -- executa a animação do personagem principal
-
+    if run == 0 then
+        x , y = player:localToContent(0 , 0)
+        player.x = player.x + passosX
+        player.y = player.y + passosY
+        x, y = display.contentCenterX - x, display.contentCenterY - y
+        backGroup.x, backGroup.y = backGroup.x + x, backGroup.y + y
+        player:play() -- executa a animação do personagem principal
+    end
 end
 
 local cronometro = function()
@@ -307,6 +328,11 @@ local function gerarJaula()
     end
 end
 
+function limparMemoriaGame()
+    print("função limparMemoriaGame()")
+    run = 1
+    composer.removeScene("game-template")
+end
 
 -- Colisões ----------------------------------------------------------------
 local function onCollision(event)
@@ -341,24 +367,31 @@ local function onCollision(event)
                 if obj2.number == 1 then
                     animal = display.newSprite(sheetAraraAzul, sequenceData3)
                     araraAzul.alpha = 1
+                    araraAzulPontos = 100
                 elseif obj2.number == 2 then 
                     animal = display.newSprite(sheetLoboGuara, sequenceData3)
                     loboGuara.alpha = 1
+                    loboGuaraPontos = 100
                 elseif obj2.number == 3 then 
                     animal = display.newSprite(sheetMacacoAranha, sequenceData3)
                     macacoAranha.alpha = 1
+                    macacoAranhaPontos = 100
                 elseif obj2.number == 4 then 
                     animal = display.newSprite(sheetOncaPintada, sequenceData3)
                     oncaPintada.alpha = 1
+                    oncaPintadaPontos = 100
                 elseif obj2.number == 5 then 
                     animal = display.newSprite(sheetGuaruba, sequenceData3)
                     guaruba.alpha = 1
+                    guarubaPontos = 100
                 elseif obj2.number == 6 then 
                     animal = display.newSprite(sheetMicoLeaoDourado, sequenceData3)
                     micoLeaoDourado.alpha = 1
+                    micoLeaoDouradoPontos = 100
                 elseif obj2.number == 7 then 
                     animal = display.newSprite(sheetTartarugaOliva, sequenceData3)
                     tartarugaOliva.alpha = 1
+                    tartarugaOlivaPontos = 100
                 end
                    
                 animal.x, animal.y = obj2.x, obj2.y
@@ -382,7 +415,7 @@ local function onCollision(event)
                 player.chave = false
                 numJaula = numJaula - 1
 
-                pontuacao = pontuacao + 100  -- Animal liberado = +100 pontos
+                --pontuacao = pontuacao + 100  -- Animal liberado = +100 pontos
 
                 if numJaula <= 0 then
                     endgame()
@@ -482,13 +515,6 @@ function scene:create( event )
     micoLeaoDourado.y = yTela / 4 - 10
     micoLeaoDourado.alpha = 0.2
 
-    -- Atribuindo os grupos
-    cenarioGroup:insert(backGroup)
-    sceneGroup:insert(backGroup)
-    sceneGroup:insert(cenarioGroup)
-    sceneGroup:insert(menuGroup)
-    sceneGroup:insert(controlesGroup)
-
     -- Joe
     player = display.newSprite(sheet2, sequenceData2)
     player.x, player.y, player.myName = xTela, yTela, "joe"
@@ -519,6 +545,13 @@ function scene:create( event )
     
     bolha:addEventListener("touch", menuStatus)
 
+    -- Atribuindo os grupos
+    cenarioGroup:insert(backGroup)
+    sceneGroup:insert(backGroup)
+    sceneGroup:insert(cenarioGroup)
+    sceneGroup:insert(menuGroup)
+    sceneGroup:insert(controlesGroup)
+
 end
 
 
@@ -541,9 +574,12 @@ function scene:show( event )
         --Importa o arquivo que faz os caçadores se movimentarem
         movimento = require( "gerador" )
 
-        -- Função importada para movimentar os caçadores
-        movimentoCacador(cacadores)
-        
+        -- Criando Co-rotina
+        co = coroutine.create(movimentoCacador)
+
+        -- Executando co-rotina passando a tabela de cacadores
+        coroutine.resume(co, cacadores)
+
         --Evita perder vida logo no início do jogo
         restorePlayer()
 
@@ -556,14 +592,15 @@ function scene:hide( event )
 	local sceneGroup = self.view
     local phase = event.phase
     if ( phase == "will" ) then
-		timer.cancel( cronometroJogo )
+        timer.cancel( cronometroJogo )
+        audio.dispose( trilhasonora )
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
         Runtime:removeEventListener( "collision", onCollision )
         Runtime:removeEventListener("enterFrame", update)  -- Enterframe evento disparado o tempo todo
 		physics.pause()
-		audio.stop( 1 )
-        composer.removeScene("game-template")
+        audio.stop( 1 )
+        --composer.removeScene("game-template")
 	end
 end
 
@@ -572,8 +609,6 @@ end
 function scene:destroy( event )
 
     local sceneGroup = self.view
-    
-    audio.dispose( trilhasonora )
 
 end
 

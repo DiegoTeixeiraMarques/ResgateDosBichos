@@ -1,10 +1,17 @@
 -- Movimentação caçador
-
+movimento = require( "game-template" )
 timeSet = 3000
 delaySet = 0
 distanciaSet = 500
+run = 0
+
+function fimDeJogo()
+    run = 1
+end
 
 function movimentoCacador(cacadores)
+
+    --local cacadores = cacadores
 
     cacador1 = cacadores[1]
     cacador2 = cacadores[2]
@@ -22,11 +29,12 @@ function movimentoCacador(cacadores)
     cacador14 = cacadores[14]
     cacador15 = cacadores[15]
 
-
-    
-
     function ponto_x1()
+        print(cacadores)
+        print(run)
 
+        if run == 0 then
+        
         cacador1:setSequence("right")
         cacador1:play()
         transition.to(cacador1, { time = timeSet, delay = 0, x = cacador1.x + 500, transition = easing.linear })
@@ -101,8 +109,12 @@ function movimentoCacador(cacadores)
         cacador15:play()
         transition.to(cacador15, { time = timeSet, delay = 0, x = cacador15.x + 500, transition = easing.linear, onComplete = ponto_x2})
         
+        else
+            limparMemoria()
+        end
     end
     function ponto_x2()
+        if run == 0 then
         cacador1:setSequence("left")
         cacador1:play()
         transition.to(cacador1, { time = timeSet, delay = 0, x = cacador1.x - 500, transition = easing.linear })
@@ -176,7 +188,9 @@ function movimentoCacador(cacadores)
         cacador15:setSequence("left")
         cacador15:play()
         transition.to(cacador15, { time = timeSet, delay = 0, x = cacador15.x - 500, transition = easing.linear, onComplete = ponto_x1})
-       
+        else
+            limparMemoria()
+        end
     end
 
     cacador16 = cacadores[16]
@@ -197,6 +211,7 @@ function movimentoCacador(cacadores)
 
 
     function ponto_x3()
+        if run == 0 then
         cacador16:setSequence("down")
         cacador16:play()
         transition.to(cacador16, { time = timeSet, delay = 0, y = cacador16.y + 500, transition = easing.linear })
@@ -270,10 +285,13 @@ function movimentoCacador(cacadores)
         cacador30:setSequence("down")
         cacador30:play()
         transition.to(cacador30, { time = timeSet, delay = 0, y = cacador30.y + 500, transition = easing.linear, onComplete = ponto_x4})
-        
+        else
+            limparMemoria()
+        end
     end
 
     function ponto_x4()
+        if run == 0 then
         cacador16:setSequence("up")
         cacador16:play()
         transition.to(cacador16, { time = timeSet, delay = 0, y = cacador16.y - 500, transition = easing.linear })
@@ -347,10 +365,18 @@ function movimentoCacador(cacadores)
         cacador30:setSequence("up")
         cacador30:play()
         transition.to(cacador30, { time = timeSet, delay = 0, y = cacador30.y - 500, transition = easing.linear, onComplete = ponto_x3})
-        
+        else
+            limparMemoria()
+        end
     end
     
-    ponto_x1()
-    ponto_x3()
-    
+   
+        ponto_x1()
+        ponto_x3()
+   
+end
+
+function limparMemoria()
+    print("função limparMemoria")
+    limparMemoriaGame()
 end
