@@ -42,7 +42,7 @@ function scene:create( event )
     local loboGuaraText = display.newText(loboGuaraPontos, display.contentCenterX + 55, display.contentCenterY + 25, "Mario-Kart-DS", 36)
     local tartarugaOlivaText = display.newText(tartarugaOlivaPontos, display.contentCenterX + 125, display.contentCenterY + 25, "Mario-Kart-DS", 36)
     local micoLeaoDouradoText = display.newText(micoLeaoDouradoPontos, display.contentCenterX + 190, display.contentCenterY + 25, "Mario-Kart-DS", 36)
-    local tempoText = display.newText(tempoFinal, display.contentCenterX + 255, display.contentCenterY + 25, "Mario-Kart-DS", 36)
+    local tempoText = display.newText(tempoFinal, display.contentCenterX + 250, display.contentCenterY + 25, "Mario-Kart-DS", 36)
 
     sceneGroup:insert (scoreText)
     sceneGroup:insert (guarubaText)

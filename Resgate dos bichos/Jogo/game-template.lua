@@ -32,6 +32,7 @@ local tempo = 500
 --local tempo = 0
 local animal = 0
 local run = 0
+local block = 0
 local araraAzulPontos = 0
 local loboGuaraPontos = 0
 local macacoAranhaPontos = 0
@@ -39,6 +40,7 @@ local oncaPintadaPontos = 0
 local guarubaPontos = 0
 local micoLeaoDouradoPontos = 0
 local tartarugaOlivaPontos = 0
+local tempoFinal = 0
 
 -- Quantidade de objetos do cenário
 local numChave = 7                     -- Quantidade de chaves criadas no início do jogo
@@ -175,12 +177,19 @@ local touchFunction = function(e)
 end
 
 -- Chamada após o gameOver
-function endGame()
-    -- finaliza jogo no gerador.lua
-    fimDeJogo()
+local function endGame()
+    
+    timer.cancel( cronometroJogo )
+    physics.pause()
+    audio.dispose( trilhasonora )
+    Runtime:removeEventListener("enterFrame", update)  -- Enterframe evento disparado o tempo todo
 
+    if tempo < 0 then
+        tempoFinal = 0
+    else
+        tempoFinal = tempo
+    end
     -- Cria variável acessivel para outra cena
-    local tempoFinal = tempo
     composer.setVariable( "tempo", tempoFinal )
     composer.setVariable( "araraAzulPontos", araraAzulPontos )	
     composer.setVariable( "loboGuaraPontos", loboGuaraPontos )	
@@ -189,10 +198,10 @@ function endGame()
     composer.setVariable( "guarubaPontos", guarubaPontos )	
     composer.setVariable( "micoLeaoDouradoPontos", micoLeaoDouradoPontos )	
     composer.setVariable( "tartarugaOlivaPontos", tartarugaOlivaPontos )		
-    
+    -- finaliza jogo no gerador.lua
+    fimDeJogo()
     -- Redireciona para tela de Scores									
     composer.gotoScene( "score", { time=800, effect="crossFade" } )
-
 end
 
 -- Função chamada após contato com caçador
@@ -223,8 +232,9 @@ local cronometro = function()
     tempoText.text = tempo
 
     if tempo <= 0 then
-        endgame()
+        endGame()
     end
+
 end
 
 -- ########
@@ -368,30 +378,51 @@ local function onCollision(event)
                     animal = display.newSprite(sheetAraraAzul, sequenceData3)
                     araraAzul.alpha = 1
                     araraAzulPontos = 100
+                    araraAzulText = display.newText("ARARA-AZUL", xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(araraAzulText, { time = 2000, delay = 0, x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(araraAzulText) end})
+                    
                 elseif obj2.number == 2 then 
                     animal = display.newSprite(sheetLoboGuara, sequenceData3)
                     loboGuara.alpha = 1
                     loboGuaraPontos = 100
+                    loboGuaraText = display.newText("LOBO-GUARA",xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(loboGuaraText, { time = 2000, delay = 0,  x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(loboGuaraText) end})
+
                 elseif obj2.number == 3 then 
                     animal = display.newSprite(sheetMacacoAranha, sequenceData3)
                     macacoAranha.alpha = 1
                     macacoAranhaPontos = 100
+                    macacoAranhaText = display.newText("MACACO-ARANHA", xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(macacoAranhaText, { time = 2000, delay = 0,  x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(macacoAranhaText) end})
+
                 elseif obj2.number == 4 then 
                     animal = display.newSprite(sheetOncaPintada, sequenceData3)
                     oncaPintada.alpha = 1
                     oncaPintadaPontos = 100
+                    oncaPintadaText = display.newText("ONCA-PINTADA", xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(oncaPintadaText, { time = 2000, delay = 0, x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(oncaPintadaText) end})
+
                 elseif obj2.number == 5 then 
                     animal = display.newSprite(sheetGuaruba, sequenceData3)
                     guaruba.alpha = 1
                     guarubaPontos = 100
+                    guarubaText = display.newText("PASSARO GUARUBA", xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(guarubaText, { time = 2000, delay = 0, x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(guarubaText) end})
+
                 elseif obj2.number == 6 then 
                     animal = display.newSprite(sheetMicoLeaoDourado, sequenceData3)
                     micoLeaoDourado.alpha = 1
                     micoLeaoDouradoPontos = 100
+                    micoLeaoDouradoText = display.newText("MICO-LEAO-DOURADO", xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(micoLeaoDouradoText, { time = 2000, delay = 0, x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(micoLeaoDouradoText) end})
+
                 elseif obj2.number == 7 then 
                     animal = display.newSprite(sheetTartarugaOliva, sequenceData3)
                     tartarugaOliva.alpha = 1
                     tartarugaOlivaPontos = 100
+                    tartarugaOlivaText = display.newText("TARTARUGA-OLIVA", xTela - xTela, display.contentCenterY - 80, "Mario-Kart-DS", 36)
+                    transition.to(tartarugaOlivaText, { time = 2000, delay = 0, x = animal.x + 500, transition = easing.linear, onComplete = function() display.remove(tartarugaOlivaText) end})
+
                 end
                    
                 animal.x, animal.y = obj2.x, obj2.y
@@ -415,10 +446,8 @@ local function onCollision(event)
                 player.chave = false
                 numJaula = numJaula - 1
 
-                --pontuacao = pontuacao + 100  -- Animal liberado = +100 pontos
-
-                if numJaula <= 0 then
-                    endgame()
+                if jaula == 0 then
+                    endGame()
                 end
                 
             end
@@ -592,13 +621,12 @@ function scene:hide( event )
 	local sceneGroup = self.view
     local phase = event.phase
     if ( phase == "will" ) then
-        timer.cancel( cronometroJogo )
-        audio.dispose( trilhasonora )
+        
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
         Runtime:removeEventListener( "collision", onCollision )
         Runtime:removeEventListener("enterFrame", update)  -- Enterframe evento disparado o tempo todo
-		physics.pause()
+		--physics.pause()
         audio.stop( 1 )
         --composer.removeScene("game-template")
 	end

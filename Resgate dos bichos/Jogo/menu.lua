@@ -45,7 +45,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 
 	-- Carrega o game-template in back
-	--composer.loadScene( "game-template" )
+	composer.loadScene( "game-template" )
 
 	-- Tela menu
 	local background = display.newImageRect( sceneGroup, "images/tela_menu.png", display.contentHeight * 1.8, display.contentWidth / 1.5)
